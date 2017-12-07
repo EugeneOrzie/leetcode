@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 int isMatch(char* s, char* p) {
     //Calculate the length
     char* matchStr = s;
@@ -149,33 +148,75 @@ int isMatchOptimic(char* s, char* p) {
     return f[patternLength][matchLength];
 }
 
+int isMatchOptimic2(char* s, char* p) {
+    int hasStar = 0;
+    char* pp = p;
+    char* ss = s;
+    while (*s){
+        //printf("s=%c, p=%c\n", *s, *p);
+        //printf("sp=%p, pp=%p\n", s, p);
+        if ((*s == *p) || (*p == '?')){
+            s++;
+            p++;
+            continue;
+        }
+
+        if (*p == '*'){
+            pp = p + 1;
+            hasStar = 1;
+            ss = s;
+            p++;
+            continue;
+        }
+
+        if (hasStar){
+            p = pp;
+            ss++;
+            s = ss;
+            continue;
+        }
+        return 0;
+    }
+    while (*p){
+        if (*p != '*'){
+            return 0;
+        }
+        p++;
+    }
+    return 1;
+}
+
 int main(){
 
     char* a1 = "aa";
     char* a2 = "a";
-    printf("ret=%d \n\n", isMatch(a1, a2));
+    printf("ret=%d \n\n", isMatchOptimic2(a1, a2));
 
     char* b1 = "aa";
     char* b2 = "a*";
-    printf("ret=%d \n\n", isMatch(b1, b2)); 
+    printf("ret=%d \n\n", isMatchOptimic2(b1, b2)); 
 
     char* c1 = "aab";
     char* c2 = "?*a*b";
-    printf("ret=%d \n\n", isMatch(c1, c2)); 
+    printf("ret=%d \n\n", isMatchOptimic2(c1, c2)); 
 
     char* d1 = "aa";
     char* d2 = "a?";
-    printf("ret=%d \n\n", isMatch(d1, d2)); 
+    printf("ret=%d \n\n", isMatchOptimic2(d1, d2)); 
 
     char* e1 = "dklsafjldskfjlsdkfj";
     char* e2 = "d*k*";
-    printf("ret=%d \n\n", isMatch(e1, e2)); 
+    printf("ret=%d \n\n", isMatchOptimic2(e1, e2)); 
 
     char* f1 = "";
     char* f2 = "";
-    printf("ret=%d \n\n", isMatch(f1, f2)); 
+    printf("ret=%d \n\n", isMatchOptimic2(f1, f2)); 
 
     char* g1 = "asdfsdfd";
     char* g2 = "a*********************************************";
-    printf("ret=%d \n\n", isMatchOptimic(g1, g2)); 
+    printf("ret=%d \n\n", isMatchOptimic2(g1, g2)); 
+
+    char* h1 = "aaaa";
+    char* h2 = "***a";
+    printf("ret=%d \n\n", isMatchOptimic2(h1, h2)); 
 }
